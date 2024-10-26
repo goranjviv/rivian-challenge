@@ -48,3 +48,59 @@ That’s the center of this solution; CRUD and visualizations are easy to implem
 I’d also love to talk to people who use the chargers for which I’m designing this system.
 Without understanding their pain points that I’m supposed to eliminate, I could completely miss the point with the solution.
 I’m not sure that I even see people using something like this for private charging stations; public - more likely, but we’d also need a mobile app and more notifications etc.
+
+## UML diagram of the entities in the system
+```mermaid
+classDiagram
+    class ChargingStation {
+        +number id
+        +string name
+        +Date createdAt
+        +Date updatedAt
+    }
+
+    class AssignedChargerTimeSlot {
+        +number id
+        +Date assignedStartsAt
+        +Date assignedEndsAt
+        +Date? startedAt
+        +Date createdAt
+        +Date updatedAt
+    }
+
+    class ChargingQueueMember {
+        +number id
+        +number preferredChargingTimeInHours
+        +boolean isPriority
+        +boolean isProcessed
+        +Date createdAt
+        +Date updatedAt
+    }
+
+    class User {
+        +number id
+        +string fullName
+        +string email
+        +number travelDistanceKm
+        +UserType userType
+        +Date createdAt
+        +Date updatedAt
+    }
+
+    class UserType {
+        <<enumeration>>
+        CompanyAdmin
+        Employee
+    }
+
+    AssignedChargerTimeSlot "many" --> "1" User : employee
+    AssignedChargerTimeSlot "many" --> "1" ChargingStation : chargingStation
+    ChargingQueueMember "many" --> "1" User : employee
+    User -- UserType : has
+```
+
+## Flow chart of the queuing algorithm
+
+```mermaid
+
+```
