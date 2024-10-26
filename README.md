@@ -36,6 +36,7 @@ I would’ve spent some time reworking it if I had more time.
 List of flaws, not limited to:
 - I don’t have migrations
 - I don’t have a full API documentation
+- I'd love to document everything better; did it somewhat in a rush
 - not all API endpoints are safe - specifically, CRUD endpoints for Company Admin
 - the app isn’t perfectly designed; would be nicer if there were some loading bars and nicer visualisations
 - what are automated tests? Doesn’t seem like my code knows.
@@ -99,8 +100,25 @@ classDiagram
     User -- UserType : has
 ```
 
-## Flow chart of the queuing algorithm
-
-```mermaid
+## Priority points formula and pseudocode for queuing algorighm
 
 ```
+const points = = positionInQueue * QUEUE_ORDER_POINTS_FACTOR +
+      travelDistanceKm * DISTANCE_POINTS_FACTOR +
+      (isPriority ? PRIORITY_POINTS : 0) +
+      (alreadyChargedToday ? ALREADY_CHARGED_TODAY_POINTS : 0);
+```
+
+`ALREADY_CHARGED_TODAY_POINTS` is negative. If someone has already charged their car today, they're put much lower in the queue.
+
+The following pseudocode is executed every 15 minutes using a NestJS cron job.
+
+- load queued entries
+- calculate priority points for each entry
+- sort entries by priority points
+- load available chargers
+- if not available chargers exist
+    - exit (wait for the next cron job iteration)
+ - determine maximum charge length based on queue demand
+ - reserve a time slot on free chargers for each queued entry
+  
