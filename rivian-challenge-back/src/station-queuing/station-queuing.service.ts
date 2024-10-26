@@ -105,8 +105,8 @@ export class StationQueuingService {
 
   // If it runs more often, more chance for high priority people to not get a slot.
   // If it runs less often, we'll have more wasted charger time.
-  // @Cron(CronExpression.EVERY_10_MINUTES)
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron(CronExpression.EVERY_10_MINUTES)
+  // @Cron(CronExpression.EVERY_10_SECONDS)
   async assignTimeSlotsForQueuedEntries() {
     const queueMembers = await this.chargingQueueMemberRepo.find({
       relations: ['employee'],
