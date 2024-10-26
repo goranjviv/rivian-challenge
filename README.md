@@ -1,10 +1,33 @@
 ## Queuing algorithm
 
-I’ve provided a flow chart for the queuing algorithm.
-Should be enough to explain it.
+Code should be self explanatory.
+Everyting is centered around the idea of priority queue points.
+They're calculated for each queue entry and then the queue entries are sorted based on the calculated points.
 There are multiple configurable, albeit hardcoded, parameters for priority points calculation on the backend, inside src/station-queuing/constants.ts file.
-I would love for the algorithm to be less hardcoded; I’d like if I’d have more factors that were determined based on the historical data.
+I would love for the algorithm to be less hardcoded; I’d like if I’d have more factors that were determined based on historical data.
 
+## Priority points formula and pseudocode for queuing algorighm
+
+```
+const points = positionInQueue * QUEUE_ORDER_POINTS_FACTOR +
+      travelDistanceKm * DISTANCE_POINTS_FACTOR +
+      (isPriority ? PRIORITY_POINTS : 0) +
+      (alreadyChargedToday ? ALREADY_CHARGED_TODAY_POINTS : 0);
+```
+
+`ALREADY_CHARGED_TODAY_POINTS` is negative. If someone has already charged their car today, they're put much lower in the queue.
+
+The following pseudocode is executed every 15 minutes using a NestJS cron job.
+
+- load queued entries
+- calculate priority points for each entry
+- sort entries by priority points
+- load available chargers
+- if not available chargers exist
+    - exit (wait for the next cron job iteration)
+ - determine maximum charge length based on queue demand
+ - reserve a time slot on free chargers for each queued entry
+  
 
 ## Possible different ways of implementing the algorithm and possible improvements
 
@@ -36,6 +59,7 @@ I would’ve spent some time reworking it if I had more time.
 List of flaws, not limited to:
 - I don’t have migrations
 - I don’t have a full API documentation
+- I'd love to document everything better; did it somewhat in a rush
 - not all API endpoints are safe - specifically, CRUD endpoints for Company Admin
 - the app isn’t perfectly designed; would be nicer if there were some loading bars and nicer visualisations
 - what are automated tests? Doesn’t seem like my code knows.
@@ -99,8 +123,3 @@ classDiagram
     User -- UserType : has
 ```
 
-## Flow chart of the queuing algorithm
-
-```mermaid
-
-```
