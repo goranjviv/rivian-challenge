@@ -9,7 +9,7 @@ I would love for the algorithm to be less hardcoded; I’d like if I’d have mo
 ## Priority points formula and pseudocode for queuing algorighm
 
 ```
-const points = = positionInQueue * QUEUE_ORDER_POINTS_FACTOR +
+const points = positionInQueue * QUEUE_ORDER_POINTS_FACTOR +
       travelDistanceKm * DISTANCE_POINTS_FACTOR +
       (isPriority ? PRIORITY_POINTS : 0) +
       (alreadyChargedToday ? ALREADY_CHARGED_TODAY_POINTS : 0);
