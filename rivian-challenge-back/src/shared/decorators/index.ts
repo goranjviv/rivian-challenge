@@ -1,0 +1,1 @@
+export * from 'src/shared/decorators/auth-user.decorator';

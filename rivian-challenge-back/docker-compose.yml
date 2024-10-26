@@ -1,0 +1,19 @@
+networks:
+  rivian_challenge_network:
+
+volumes:
+  rivian_challenge_postgres_volume:
+
+services:
+  rivian_challenge_postgres:
+    container_name: rivian_challenge_postgres
+    restart: always
+    image: postgres
+    env_file:
+      - .env.postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - rivian_challenge_postgres_volume:/var/lib/postgresql/data
+    networks:
+      - rivian_challenge_network
