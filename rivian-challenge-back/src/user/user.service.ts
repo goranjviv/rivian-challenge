@@ -5,13 +5,64 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Not, Repository } from 'typeorm';
 import { encodeVeryWeakAuthToken } from 'src/shared/helpers';
+import { UserType } from 'src/shared/enums';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepo: Repository<User>,
-  ) {}
+  ) {
+    this.createDefaultUsers();
+  }
+
+  // quick hack to prepopulate the users table
+  async createDefaultUsers() {
+    const defaultAdmin = await this.userRepo.findOne({
+      where: {
+        email: "admin@rivian.com"
+      }
+    });
+
+    if (!defaultAdmin) {
+      await this.userRepo.save({
+        userType: UserType.CompanyAdmin,
+        email: "admin@rivian.com",
+        travelDistanceKm: 50,
+        fullName: "Admin Rivianovic"
+      } as Partial<User>);
+    }
+
+    const defaultEmployee1 = await this.userRepo.findOne({
+      where: {
+        email: "employee1@rivian.com"
+      }
+    });
+
+    if (!defaultEmployee1) {
+      await this.userRepo.save({
+        userType: UserType.Employee,
+        email: "employee1@rivian.com",
+        travelDistanceKm: 66,
+        fullName: "Employee Prvi Employkovic"
+      } as Partial<User>);
+    }
+
+    const defaultEmployee2 = await this.userRepo.findOne({
+      where: {
+        email: "employee2@rivian.com"
+      }
+    });
+
+    if (!defaultEmployee2) {
+      await this.userRepo.save({
+        userType: UserType.Employee,
+        email: "employee2@rivian.com",
+        travelDistanceKm: 188,
+        fullName: "Employee Drugi Employkovic"
+      } as Partial<User>);
+    }
+  }
 
   async login(email: string) {
     const user = await this.userRepo.findOne({
